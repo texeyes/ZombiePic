@@ -40,36 +40,35 @@ if (!replicateToken) {
 const buffer = fs.readFileSync(file.filepath)
 const base64 = buffer.toString('base64')
 
-// Optimized prompts for nano-banana model
+// Prompts optimized for SeeDream-4
 const promptMap = {
-  classic: 'Edit the provided photo into a classic zombie horror movie portrait while preserving the person’s exact facial identity and expression; keep hair shape and primary clothing silhouette but zombify textures and details. Add cracked, decayed skin with subtle green‑gray tones, exposed veins, desaturated lips, faint blood smears, and slightly glowing cataract eyes; keep features recognizable. Cinematic, low‑key three‑point lighting with a narrow rim light and soft key from 45°, deep shadows, and light fog. 35mm film look with vintage film grain, light halation on highlights, slight vignette, and gentle chromatic aberration. Background: moody, shallow‑depth, out‑of‑focus alley or abandoned theater marquee with practical lights, muted reds and teal accents. Color grade: cool teal shadows, warm tungsten highlights, high contrast, low saturation. Add micro‑details: hairline dirt, neck bruising, torn fabric edges, dried blood flecks, cracked makeup texture. Composition: torso portrait, eye level, subject centered, eyes toward camera. Style: 1980s practical effects vibe, Romero/early Carpenter mood, no camp. Ultra‑sharp skin pores where intact, realistic decay where broken. 8K detail, photo‑real, no extra limbs, no missing facial parts, no heavy gore',
-  cartoon: 'cute cartoon style zombie, green skin, playful Halloween character, comic book art style, fun and friendly zombie',
-  survivor: 'gritty post-apocalyptic survivor zombie, dirty bloodstained face, battle scars, realistic wounds, cinematic dramatic lighting'
+  classic: 'portrait of person with zombie makeup, pale decayed skin, dark circles around eyes, horror movie special effects makeup, blood and wounds, realistic zombie transformation, maintaining same face',
+  cartoon: 'portrait with cartoon zombie style, green skin tone, playful Halloween makeup, comic art style, fun zombie character, keeping original facial features',
+  survivor: 'portrait of apocalypse survivor with zombie infection, gritty realistic makeup, dirt and blood on face, dramatic cinematic lighting, post-apocalyptic style, same person'
 }
 
 const prompt = promptMap[style] || promptMap.classic
 
-console.log('Creating prediction with nano-banana model...')
+console.log('Creating prediction with SeeDream-4 model...')
 
-// Using the nano-banana model
-// We need to find the exact version - let me use the model name approach
+// Using bytedance/seedream-4 model
 const predictionResp = await axios.post(
   'https://api.replicate.com/v1/predictions',
   {
-    model: 'google/nano-banana',
+    model: 'bytedance/seedream-4',
     input: {
       image: `data:image/jpeg;base64,${base64}`,
       prompt: prompt,
-      negative_prompt: 'blurry, low quality, distorted, deformed, ugly, bad anatomy, extra limbs',
-      num_inference_steps: 20,
-      guidance_scale: 7.5
+      negative_prompt: 'blurry, low quality, distorted face, deformed, bad anatomy, different person, unrecognizable',
+      num_inference_steps: 28,
+      guidance_scale: 7.5,
+      seed: Math.floor(Math.random() * 1000000)
     }
   },
   {
     headers: {
       'Authorization': `Token ${replicateToken}`,
-      'Content-Type': 'application/json',
-      'Prefer': 'wait'
+      'Content-Type': 'application/json'
     }
   }
 )

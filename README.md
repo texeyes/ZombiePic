@@ -1,17 +1,10 @@
-# ZombiePic Starter (Next.js + Replicate)
+# 🧟‍♂️ ZombiePic
 
-## Quick start
+Upload a photo and see it transformed into a zombie — powered by AI.
 
-1. Clone this repo
-2. `npm install`
-3. Add environment variable `REPLICATE_API_TOKEN` (see https://replicate.com/account)
-4. `npm run dev`
+## Quick Start
+1. Upload these files to your GitHub repo.
+2. Deploy via Vercel.
+3. Add your Replicate API key later in settings.
 
-## Deploy
-
-- Push to GitHub and connect to Vercel. Add REPLICATE_API_TOKEN in Vercel Environment Variables.
-- Use a small GPU-backed Replicate plan for better speed, or rely on Replicate’s hosted inference.
-
-## Notes
-- This starter calls Replicate's Predictions API. Replace the `version` in `pages/api/zombify.js` with the model version ID you prefer (text-to-image or image-to-image).
-- For production, implement rate-limiting, queueing, and temporary file cleanup. Consider storing generated images in S3 and deleting after 24 hours.
+Enjoy the viral Halloween fun!

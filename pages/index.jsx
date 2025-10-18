@@ -15,7 +15,6 @@ export default function Home() {
       setSelectedFile(file)
       setError(null)
       setResult(null)
-      
       const reader = new FileReader()
       reader.onloadend = () => {
         setPreview(reader.result)
@@ -29,30 +28,21 @@ export default function Home() {
       setError('Please select a photo first')
       return
     }
-
     setLoading(true)
     setError(null)
     setResult(null)
-
     try {
       const formData = new FormData()
       formData.append('photo', selectedFile)
       formData.append('style', style)
-
       const response = await axios.post('/api/zombify', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
         timeout: 120000
       })
-
       setResult(response.data.imageUrl)
-
     } catch (err) {
       console.error('Upload error:', err)
-      
       let errorMessage = 'Something went wrong. Please try again.'
-      
       if (err.response && err.response.data && err.response.data.error) {
         errorMessage = err.response.data.error
       } else if (err.code === 'ECONNABORTED') {
@@ -60,7 +50,6 @@ export default function Home() {
       } else if (err.message) {
         errorMessage = err.message
       }
-      
       setError(errorMessage)
     } finally {
       setLoading(false)
@@ -78,18 +67,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="container mx-auto px-4 py-8 max-w-4xl">
-        
         <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-bold text-green-500 mb-4">
-            ZombiePic.com
-          </h1>
-          <p className="text-xl text-gray-400">
-            Turn yourself undead — AI-powered. Share for Halloween!
-          </p>
+          <h1 className="text-5xl md:text-6xl font-bold text-green-500 mb-4">ZombiePic.com</h1>
+          <p className="text-xl text-gray-400">Turn yourself undead — AI-powered. Share for Halloween!</p>
         </div>
-
         <div className="bg-gray-900 rounded-lg p-8 shadow-2xl">
-          
           {!result ? (
             <div>
               <div className="mb-6">
@@ -97,11 +79,7 @@ export default function Home() {
                   <div className="border-2 border-dashed border-gray-600 rounded-lg p-8 cursor-pointer hover:border-green-500 transition">
                     {preview ? (
                       <div>
-                        <img 
-                          src={preview} 
-                          alt="Preview" 
-                          className="max-h-64 mx-auto rounded mb-4"
-                        />
+                        <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded mb-4" />
                         <p className="text-gray-400">Click to change photo</p>
                       </div>
                     ) : (
@@ -114,82 +92,42 @@ export default function Home() {
                       </div>
                     )}
                   </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
+                  <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
                 </label>
               </div>
-
               <div className="mb-6">
                 <label className="block text-lg mb-3 text-center">Choose Your Zombie Style</label>
                 <div className="grid grid-cols-3 gap-4">
-                  <button
-                    onClick={() => setStyle('classic')}
-                    className={`p-4 rounded-lg border-2 transition ${
-                      style === 'classic' 
-                        ? 'border-green-500 bg-green-900' 
-                        : 'border-gray-600 hover:border-gray-500'
-                    }`}
-                  >
+                  <button onClick={() => setStyle('classic')} className={`p-4 rounded-lg border-2 transition ${style === 'classic' ? 'border-green-500 bg-green-900' : 'border-gray-600 hover:border-gray-500'}`}>
                     <div className="text-3xl mb-2">🧟</div>
                     <div className="font-semibold">Classic</div>
                     <div className="text-xs text-gray-400">Horror movie style</div>
                   </button>
-                  
-                  <button
-                    onClick={() => setStyle('cartoon')}
-                    className={`p-4 rounded-lg border-2 transition ${
-                      style === 'cartoon' 
-                        ? 'border-green-500 bg-green-900' 
-                        : 'border-gray-600 hover:border-gray-500'
-                    }`}
-                  >
+                  <button onClick={() => setStyle('cartoon')} className={`p-4 rounded-lg border-2 transition ${style === 'cartoon' ? 'border-green-500 bg-green-900' : 'border-gray-600 hover:border-gray-500'}`}>
                     <div className="text-3xl mb-2">🎃</div>
                     <div className="font-semibold">Cartoon</div>
                     <div className="text-xs text-gray-400">Fun & playful</div>
                   </button>
-                  
-                  <button
-                    onClick={() => setStyle('survivor')}
-                    className={`p-4 rounded-lg border-2 transition ${
-                      style === 'survivor' 
-                        ? 'border-green-500 bg-green-900' 
-                        : 'border-gray-600 hover:border-gray-500'
-                    }`}
-                  >
+                  <button onClick={() => setStyle('survivor')} className={`p-4 rounded-lg border-2 transition ${style === 'survivor' ? 'border-green-500 bg-green-900' : 'border-gray-600 hover:border-gray-500'}`}>
                     <div className="text-3xl mb-2">💀</div>
                     <div className="font-semibold">Survivor</div>
                     <div className="text-xs text-gray-400">Post-apocalyptic</div>
                   </button>
                 </div>
               </div>
-
               {error && (
                 <div className="mb-6 p-4 bg-red-900 border border-red-600 rounded-lg">
                   <p className="text-red-200">{error}</p>
                 </div>
               )}
-
               <div className="flex gap-4">
-                <button
-                  onClick={handleSubmit}
-                  disabled={!selectedFile || loading}
-                  className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-lg transition text-lg"
-                >
+                <button onClick={handleSubmit} disabled={!selectedFile || loading} className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-lg transition text-lg">
                   {loading ? 'Creating Your Zombie...' : 'Zombify Me'}
                 </button>
-                
-                <button
-                  onClick={() => alert('Challenge feature coming soon!')}
-                  className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg transition text-lg"
-                >
+                <button onClick={() => alert('Challenge feature coming soon!')} className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-lg transition text-lg">
                   Challenge a Friend
                 </button>
               </div>
-
               {loading && (
                 <div className="mt-6 text-center">
                   <div className="animate-pulse text-green-500 mb-2">
@@ -202,50 +140,24 @@ export default function Home() {
             </div>
           ) : (
             <div className="text-center">
-              <h2 className="text-3xl font-bold text-green-500 mb-6">
-                Your Zombie Transformation!
-              </h2>
-              
+              <h2 className="text-3xl font-bold text-green-500 mb-6">Your Zombie Transformation!</h2>
               <div className="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
                   <p className="text-sm text-gray-400 mb-2">Original</p>
-                  <img 
-                    src={preview} 
-                    alt="Original" 
-                    className="w-full rounded-lg"
-                  />
+                  <img src={preview} alt="Original" className="w-full rounded-lg" />
                 </div>
                 <div>
                   <p className="text-sm text-gray-400 mb-2">Zombified</p>
-                  <img 
-                    src={result} 
-                    alt="Zombie result" 
-                    className="w-full rounded-lg"
-                  />
+                  <img src={result} alt="Zombie result" className="w-full rounded-lg" />
                 </div>
               </div>
-
               <div className="flex gap-4">
-                <a
-                  href={result}
-                  download="my-zombie-pic.jpg"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition"
-                >
-                  Download
-                </a>
-                <button
-                  onClick={handleReset}
-                  className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition"
-                >
-                  Create Another
-                </button>
+                <a href={result} download="my-zombie-pic.jpg" target="_blank" rel="noopener noreferrer" className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition">Download</a>
+                <button onClick={handleReset} className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition">Create Another</button>
               </div>
             </div>
           )}
         </div>
-
         <div className="text-center mt-8 text-gray-500 text-sm">
           <p>Made for Halloween — images are ephemeral and deleted after 24h.</p>
         </div>

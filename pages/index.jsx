@@ -17,7 +17,6 @@ setError(null)
 setResult(null)
 
 ```
-  // Create preview
   const reader = new FileReader()
   reader.onloadend = () => {
     setPreview(reader.result)
@@ -40,31 +39,25 @@ setError(null)
 setResult(null)
 
 try {
-  // Create FormData
   const formData = new FormData()
   formData.append('photo', selectedFile)
   formData.append('style', style)
 
-  console.log('Uploading to /api/zombify...')
-
-  // Send to API
   const response = await axios.post('/api/zombify', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     },
-    timeout: 120000 // 2 minute timeout
+    timeout: 120000
   })
 
-  console.log('Success:', response.data)
   setResult(response.data.imageUrl)
 
 } catch (err) {
   console.error('Upload error:', err)
   
-  // Better error handling
   let errorMessage = 'Something went wrong. Please try again.'
   
-  if (err.response?.data?.error) {
+  if (err.response && err.response.data && err.response.data.error) {
     errorMessage = err.response.data.error
   } else if (err.code === 'ECONNABORTED') {
     errorMessage = 'Request timed out. The image might be too large.'
@@ -93,7 +86,6 @@ return (
 <div className="container mx-auto px-4 py-8 max-w-4xl">
 
 ```
-    {/* Header */}
     <div className="text-center mb-12">
       <h1 className="text-5xl md:text-6xl font-bold text-green-500 mb-4">
         ZombiePic.com
@@ -103,12 +95,10 @@ return (
       </p>
     </div>
 
-    {/* Main Card */}
     <div className="bg-gray-900 rounded-lg p-8 shadow-2xl">
       
       {!result ? (
-        <>
-          {/* File Upload */}
+        <div>
           <div className="mb-6">
             <label className="block mb-4 text-center">
               <div className="border-2 border-dashed border-gray-600 rounded-lg p-8 cursor-pointer hover:border-green-500 transition">
@@ -140,7 +130,6 @@ return (
             </label>
           </div>
 
-          {/* Style Selection */}
           <div className="mb-6">
             <label className="block text-lg mb-3 text-center">Choose Your Zombie Style</label>
             <div className="grid grid-cols-3 gap-4">
@@ -185,14 +174,12 @@ return (
             </div>
           </div>
 
-          {/* Error Display */}
           {error && (
             <div className="mb-6 p-4 bg-red-900 border border-red-600 rounded-lg">
               <p className="text-red-200">{error}</p>
             </div>
           )}
 
-          {/* Action Buttons */}
           <div className="flex gap-4">
             <button
               onClick={handleSubmit}
@@ -210,7 +197,6 @@ return (
             </button>
           </div>
 
-          {/* Loading State */}
           {loading && (
             <div className="mt-6 text-center">
               <div className="animate-pulse text-green-500 mb-2">
@@ -220,9 +206,8 @@ return (
               <p className="text-sm text-gray-500">This may take 30-60 seconds</p>
             </div>
           )}
-        </>
+        </div>
       ) : (
-        /* Result Display */
         <div className="text-center">
           <h2 className="text-3xl font-bold text-green-500 mb-6">
             Your Zombie Transformation!
@@ -268,7 +253,6 @@ return (
       )}
     </div>
 
-    {/* Footer */}
     <div className="text-center mt-8 text-gray-500 text-sm">
       <p>Made for Halloween — images are ephemeral and deleted after 24h.</p>
     </div>

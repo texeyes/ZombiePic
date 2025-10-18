@@ -40,38 +40,36 @@ if (!replicateToken) {
 const buffer = fs.readFileSync(file.filepath)
 const base64 = buffer.toString('base64')
 
-// Updated prompts focusing on makeup and effects overlay
+// Optimized prompts for nano-banana model
 const promptMap = {
-  classic: 'apply zombie makeup, gray decaying skin texture, dark sunken eyes, horror movie prosthetics, bloody wounds, keeping the same facial structure and features',
-  cartoon: 'cartoon zombie filter effect, green skin tint, fun Halloween costume makeup, preserving original face',
-  survivor: 'apocalypse survivor with dirt and blood, grime makeup, realistic battle scars and wounds, same face with effects'
+  classic: 'zombie with decayed gray skin, dark sunken eyes, horror movie makeup, rotting flesh texture, blood and gore, scary undead, keeping facial structure',
+  cartoon: 'cute cartoon style zombie, green skin, playful Halloween character, comic book art style, fun and friendly zombie',
+  survivor: 'gritty post-apocalyptic survivor zombie, dirty bloodstained face, battle scars, realistic wounds, cinematic dramatic lighting'
 }
 
 const prompt = promptMap[style] || promptMap.classic
 
-// Using jagilley/controlnet-scribble which preserves structure better
-// Lower strength = more face preservation
-const modelVersion = 'db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf'
+console.log('Creating prediction with nano-banana model...')
 
-console.log('Creating prediction with Replicate...')
-
+// Using the nano-banana model
+// We need to find the exact version - let me use the model name approach
 const predictionResp = await axios.post(
   'https://api.replicate.com/v1/predictions',
   {
-    version: modelVersion,
+    model: 'google/nano-banana',
     input: {
       image: `data:image/jpeg;base64,${base64}`,
       prompt: prompt,
-      negative_prompt: 'completely different person, face swap, different facial features, unrecognizable',
-      num_inference_steps: 25,
-      guidance_scale: 7.5,
-      strength: 0.45
+      negative_prompt: 'blurry, low quality, distorted, deformed, ugly, bad anatomy, extra limbs',
+      num_inference_steps: 20,
+      guidance_scale: 7.5
     }
   },
   {
     headers: {
       'Authorization': `Token ${replicateToken}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Prefer': 'wait'
     }
   }
 )
@@ -81,7 +79,7 @@ console.log('Prediction created:', prediction.id)
 
 let outputUrl = null
 for (let i = 0; i < 60; i++) {
-  await new Promise(resolve => setTimeout(resolve, 1000))
+  await new Promise(resolve => setTimeout(resolve, 2000))
   
   const checkResp = await axios.get(
     `https://api.replicate.com/v1/predictions/${prediction.id}`,
